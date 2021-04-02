@@ -21,6 +21,11 @@ module demo-port {
       description "10 Gbps port speed";
     }
 
+    identity SPEED_100GB {
+      base SPEED;
+      description "100 Gbps port speed";
+    }
+
     typedef port-number {
       type uint16 {
         range 1..32;
@@ -37,6 +42,11 @@ module demo-port {
                 base demo-port:SPEED;
             }
             description "Configurable speed of a switch port";
+        }
+
+        leaf test {
+            type boolean;
+            description "Test";
         }
     }
 

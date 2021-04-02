@@ -14,6 +14,9 @@ We start with a simple YANG module called `demo-port` in
 
 Take a look at the model and try to derive the structure. What are valid values
 for each of the leaf nodes?
+  * speed: identityref
+  * status: True|False
+  * port-number: uint16 (range 1-32)
 
 This model is self contained, so it isn't too difficult to work it out. However,
 most YANG models are defined over many files that makes it very complicated to
@@ -72,6 +75,7 @@ In the interface model, we can see the path to enable or disable an interface:
 `interfaces/interface[name]/config/enabled`
 
 What is the path to read the number of incoming packets (`in-pkts`) on an interface?
+* `interfaces/interface[name]/state/counters/in-pkts`
 
 ------
 
@@ -82,6 +86,24 @@ What is the path to read the number of incoming packets (`in-pkts`) on an interf
 Try to find the description of the `enabled` or `in-pkts` leaf nodes.
 
 *Hint:* Take a look at the `openconfig-interfaces.yang` file.
+
+```
+enabled:
+        "This leaf contains the configured, desired state of the
+        interface.
+        Systems that implement the IF-MIB use the value of this
+        leaf in the 'running' datastore to set
+        IF-MIB.ifAdminStatus to 'up' or 'down' after an ifEntry
+        has been initialized, as described in RFC 2863.
+        Changes in this leaf in the 'running' datastore are
+        reflected in ifAdminStatus, but if ifAdminStatus is
+        changed over SNMP, this leaf is not affected.";
+        
+in-pkts:
+          "The total number of packets received on the interface,
+          including all unicast, multicast, broadcast and bad packets
+          etc.";
+```
 
 ------
 
@@ -191,6 +213,9 @@ You will find `openconfig.proto` and `enums.proto` in the `/proto/openconfig` di
 get the ingress packets counter in the protobuf messages.
 
 *Hint:* Searching by schemapath might help.
+
+  * `ywrapper.BoolValue enabled = 37224301`
+  * `ywrapper.UintValue in_pkts = 412843491`
 
 ------
 
@@ -310,10 +335,14 @@ $ util/gnmi-cli --grpc-addr localhost:50001 get / | util/oc-pb-decoder | less
 The contents of the response should now be easier to read. Scroll down to the first
 `interface`. Is the interface enabled? What is the speed of the port?
 
+  * enabled, 10GB
+
 ------
 
 *Extra credit:* Can you find `in-pkts`? If not, why do you think they are
 missing?
+
+  * we didn't ask for it?
 
 -------
 

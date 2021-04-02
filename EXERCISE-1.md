@@ -32,24 +32,33 @@ referring to the P4 program to understand the different parts in more details.
 **Parser**
 
 * List all the protocol headers that can be extracted from a packet.
+  * cpu_out, ethernet, ipv4, ipv6, tcp, udp, icmp, icmpv6, ndp, srv6h, srv6_list
+
 * Which header is expected to be the first one when parsing a new packet
+  * either cpu_out or ethernet, depending on the ingress port
 
 **Ingress pipeline**
 
 * For the L2 bridging case, which table is used to replicate NDP requests to
   all host-facing ports? What type of match is used in that table?
+  * l2_ternary_table, ternary
 * In the ACL table, what's the difference between `send_to_cpu` and
   `clone_to_cpu` actions?
+  * `send_to_cpu` forwards packet to the CPU port, no clone is made;
+    `clone_to_cpu` clones a packet, so two packets appear in the egress pipeline if the original packet is not dropped before
 * In the apply block, what is the first table applied to a packet? Are P4Runtime
   packet-out treated differently?
+  * l2_exact_table, potentially, but no logic defined yet
 
 **Egress pipeline**
 
 * For multicast packets, can they be replicated to the ingress port?
+  * no, line 565 implements multicast source pruning - it rejects packet going out on the same port.
 
 **Deparser**
 
 * What is the first header to be serialized on the wire and in which case?
+  * always Ethernet, cpu_in is never set to be valid
 
 ## 2. Compile P4 program
 
@@ -109,15 +118,20 @@ Take a look at this file and try to answer the following questions:
 
 1. What is the fully qualified name of the `l2_exact_table`? What is its numeric
    ID?
+   * IngressPipeImpl.l2_exact_table, 33605373
 2. To which P4 entity does the ID `16812802` belong to? A table, an action, or
    something else? What is the corresponding fully qualified name?
+   * action IngressPipeImpl.set_egress_port
 3. For the `IngressPipeImpl.set_egress_port` action, how many parameters are
    defined for this action? What is the bitwidth of the parameter named
    `port_num`?
+   * 1 parameter, 9 bits
 4. At the end of the file, look for the definition of the
    `controller_packet_metadata` message with name `packet_out` at the end of the
    file. Now look at the definition of `header cpu_out_header_t` in the P4
    program. Do you see any relationship between the two?
+   * `controller_packet_metadata` represents header cpu_out_header_t` as defined in the P4 file;
+     `@controller_header("packet_out")` annotation is used to create this relationship
 
 ## 3. Start Mininet topology
 
