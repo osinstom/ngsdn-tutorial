@@ -10,7 +10,7 @@
         "criteria": [
           {
             "type": "IPV4_DST",
-            "ip": "<INSERT UE IP ADDRESS HERE>/32"
+            "ip": "17.0.0.1/32"
           }
         ]
       },

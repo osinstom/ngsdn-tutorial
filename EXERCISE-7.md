@@ -153,16 +153,22 @@ following questions:
 
 * What is the pipeconf ID used for all 4 switches? Which
   pipeconf ID did we use before? Why is it different?
+  * That's trivial; we use a different ONOS app for Trellis
 * In the new file, each device has a `"segmentrouting"` config block (JSON
   subtree). Do you see any similarities with the previous file and the
   `"fabricDeviceConfig"` block?
+  * `myStaticnMac` corresponds to `routerMac`, `isEdgeRouter` used instead of `isSpine`, SID has a different format
 * How come all `"fabricDeviceConfig"` blocks are gone in the new file?
+  * just replaced with `segmentrouting` section
 * Look at the `"interfaces"` config blocks, what has changed w.r.t. the old
   file?
+  * section about VLAN tagging added
 * In the new file, why do the untagged interfaces have only one VLAN ID value,
   while the tagged ones can take many (JSON array)?
+  * VLAN trunking?
 * Is the `interfaces` block provided for all host-facing ports? Which ports are
   missing and which hosts are attached to those ports?
+  * ports for `leaf2` are missing, hosts h2, h3, h4 are attached to those ports
 
 
 ## 1. Restart ONOS and Mininet with the IPv4 topology

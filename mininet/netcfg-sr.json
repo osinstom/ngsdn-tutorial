@@ -121,6 +121,30 @@
           ]
         }
       ]
+    },
+    "device:leaf2/3": {
+      "interfaces": [
+        {
+          "name": "leaf2-3",
+          "ips": [
+            "172.16.3.254/24"
+          ],
+          "vlan-tagged": [
+            300
+          ]
+        }
+      ]
+    },
+    "device:leaf2/4": {
+      "interfaces": [
+        {
+          "name": "leaf2-4",
+          "ips": [
+            "172.16.4.254/24"
+          ],
+          "vlan-untagged": 400
+        }
+      ]
     }
   },
   "hosts": {

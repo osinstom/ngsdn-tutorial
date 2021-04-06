@@ -343,6 +343,7 @@ push an MPLS label with hex value`0x65`, or 101 in base 10.
 
 Spine switches will use this label to forward packets. Can you tell what 101
 identifies here? Hint: take a look at [netcfg-gtp.json]
+  * SID of `leaf1`
 
 ## 7. Use ONOS REST APIs to create GTP flow rule
 
